@@ -1,0 +1,58 @@
+---
+title: "Licenciamiento de Universidades"
+author: "Lucia Gomez Llactahuamani"
+date: "Creado el `r Sys.Date()`"
+output: tint::tintHtml
+bibliography: skeleton.bib
+link-citations: yes
+---
+
+
+```{r setup, include=FALSE}
+library(tint)
+# invalidate cache when the package version changes
+knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tint'))
+options(htmltools.dir.version = FALSE)
+```
+
+# Licencimianeto de universidades por la SUNEDU 
+
+Es un procedimiento obligatorio cuyo objetivo es verificar que todas las universidades peruanas cumplan con las condiciones básicas de calidad (CBC) para ofrecer el servicio educativo superior universitario.
+
+Universidades Licenciadas hasta el momento:
+
+```{r mis-configuraciones-iniciales, fig.width=4, fig.height=4, cache=TRUE, echo=FALSE, message=FALSE,comment=FALSE,warning=FALSE}
+library(tidyverse)
+library(readxl)
+library(dplyr)
+library(DataExplorer)
+library(ggplot2)
+
+setwd("F:/RESEARCH/BEST/Licenciamiento/licenciamiento")
+licencia <- readxl::read_xls("Licenciamiento Institucional_5 (1).xls")
+licencia1 <- licencia %>% select(`NOMBRE`,`TIPO_GESTION`,`ESTADO_LICENCIAMIENTO`,`PERIODO_LICENCIAMIENTO`,`DEPARTAMENTO_LOCAL`)
+DT::datatable(licencia1)
+```                          
+
+# Análisis gráfico del licenciamiento de universidades
+
+## Estado del Licenciamiento de universidades por tipo de gestión
+
+```{r grafico_1, fig.width=10, fig.height=4, cache=TRUE, echo=FALSE}
+ggplot(licencia, aes(ESTADO_LICENCIAMIENTO, fill=TIPO_GESTION))+geom_bar(position="fill") + 
+    ylab("Estado del licenciamiento")+
+   xlab("Proporción de entidades")+
+  theme_minimal()
+```
+
+## Años de Licenciamiento por tipo de gestión
+
+```{r grafico_2, fig.width=10, fig.height=4, cache=TRUE, echo=FALSE}
+
+p <- licencia %>% filter(`ESTADO_LICENCIAMIENTO`=="LICENCIA OTORGADA")
+
+ggplot(p, aes(`PERIODO_LICENCIAMIENTO`, fill=TIPO_GESTION))+geom_bar(position="stack") +
+  ylab("Número de universidades licenciadas")+
+   xlab("Años de licenciamiento")+
+  theme_minimal()
+```
